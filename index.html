@@ -93,7 +93,7 @@ main { max-width: 1440px; margin: 0 auto; padding: 32px 24px 20px; }
 .section-head h2 { font-family: var(--display); font-weight: 700; font-size: 22px; margin: 0; letter-spacing: -0.01em; }
 .section-head .count { font-size: 14px; color: var(--ink-mute); }
 
-.grid { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 16px; }
+.grid { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 1180px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 900px)  { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px)  { .grid { grid-template-columns: 1fr; } }
@@ -104,9 +104,11 @@ main { max-width: 1440px; margin: 0 auto; padding: 32px 24px 20px; }
   transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 .tool:hover { border-color: #D2C7AE; box-shadow: 0 10px 28px rgba(12,21,36,0.08); transform: translateY(-2px); }
+.tool.soon { border: 2px solid var(--st-gold); background: #FFFCF4; }
+.tool.soon:hover { border-color: var(--st-bronze); }
 
 .tool { padding: 0; overflow: hidden; }
-.tool-body { padding: 0 18px 18px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.tool-body { padding: 0 14px 18px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
 .tool-art {
   background: radial-gradient(120% 90% at 50% 38%, #13213A 0%, var(--st-deep) 62%);
   aspect-ratio: 16 / 9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
@@ -115,7 +117,7 @@ main { max-width: 1440px; margin: 0 auto; padding: 32px 24px 20px; }
 .tool-art img { width: 80px; height: auto; display: block; }
 .tool-art .art-name {
   font-family: var(--body); font-weight: 600; color: #fff; text-transform: uppercase;
-  font-size: 14px; letter-spacing: 0.06em; text-align: center; padding: 0 16px; line-height: 1.2;
+  font-size: 13px; letter-spacing: 0.05em; text-align: center; padding: 0 10px; line-height: 1.2;
 }
 .tool-lockup { padding-top: 4px; }
 .tool-name .org {
@@ -124,10 +126,10 @@ main { max-width: 1440px; margin: 0 auto; padding: 32px 24px 20px; }
   text-transform: uppercase; color: var(--st-bronze); margin-bottom: 4px;
 }
 .tool-name h3 {
-  font-family: var(--display); font-weight: 700; font-size: 19px; line-height: 1.1;
+  font-family: var(--display); font-weight: 700; font-size: 18px; line-height: 1.1;
   letter-spacing: -0.01em; margin: 0; color: var(--ink);
 }
-.tool p.desc { margin: 0; color: var(--ink-soft); font-size: 15px; line-height: 1.5; }
+.tool p.desc { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.5; }
 .meta { display: flex; flex-wrap: wrap; gap: 8px; }
 .tag {
   font-size: 13px; font-weight: 600; color: var(--st-navy); background: #EFEBE1;
@@ -280,6 +282,14 @@ const TOOLS = [
     desc: "The complete organisational platform. It shows the full role architecture across five disciplines with the weekly pulse, both audit loops and the self and manager views.",
     tags: ["Organisations"],
     gated: true
+  },
+  {
+    name: "Value Feedback Loop",
+    url: "",
+    desc: "Staff being supported reflect on the value of the tools, conversations, process, Performance Support Guide and ST Performance as a whole for their holistic growth as practitioners and leaders. A PDF guides targeted improvements.",
+    tags: [],
+    gated: false,
+    soon: true
   }
 ];
 
@@ -299,7 +309,7 @@ function render() {
     const btn = live
       ? '<a class="open" href="' + esc(t.url.trim()) + '" target="_blank" rel="noopener" aria-label="Open ' + esc(t.name) + '">Open tool <span class="arrow" aria-hidden="true">&rarr;</span></a>'
       : '<span class="open pending" aria-disabled="true">Link coming soon</span>';
-    return '<article class="tool">' +
+    return '<article class="tool' + (t.soon ? ' soon' : '') + '">' +
              '<div class="tool-art" aria-hidden="true"><img src="' + MARK + '" alt=""><span class="art-name">' + esc(t.name) + '</span></div>' +
              '<div class="tool-body">' +
              '<div class="tool-lockup"><div class="tool-name"><span class="org">ST Performance</span><h3>' + esc(t.name) + '</h3></div></div>' +
