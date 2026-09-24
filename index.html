@@ -52,7 +52,7 @@ a { color: inherit; }
 /* ---- Masthead ---- */
 .mast { background: var(--st-deeper); color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); }
 .mast-inner {
-  max-width: 1120px; margin: 0 auto; padding: 18px 24px;
+  max-width: 1280px; margin: 0 auto; padding: 18px 24px;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
 .lockup { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; }
@@ -67,20 +67,20 @@ a { color: inherit; }
 .mast-link:hover { color: var(--st-gold); border-color: var(--st-gold); }
 
 .hero { background: var(--st-deeper); color: #fff; }
-.hero-inner { max-width: 1120px; margin: 0 auto; padding: 40px 24px 64px; }
+.hero-inner { max-width: 1280px; margin: 0 auto; padding: 22px 24px 26px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 40px; flex-wrap: wrap; }
 .eyebrow {
-  font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--st-gold); margin: 0 0 14px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--st-gold); margin: 0 0 8px;
 }
 .hero h1 {
-  font-family: var(--display); font-weight: 700; margin: 0; max-width: 18ch;
-  font-size: clamp(34px, 5.6vw, 58px); line-height: 1.02; letter-spacing: -0.02em;
+  font-family: var(--display); font-weight: 700; margin: 0;
+  font-size: clamp(26px, 3.2vw, 36px); line-height: 1.08; letter-spacing: -0.02em;
 }
-.hero p.lede { margin: 18px 0 0; max-width: 58ch; font-size: 18px; color: rgba(255,255,255,0.78); }
+.hero p.lede { margin: 0; max-width: 46ch; font-size: 15px; color: rgba(255,255,255,0.72); }
 
 /* Brand chevron rule: navy with a bronze break */
 .chevron {
-  height: 6px;
+  height: 4px;
   background: linear-gradient(90deg,
     var(--st-navy) 0%, var(--st-navy) 34%,
     var(--st-bronze) 34%, var(--st-bronze) 40%,
@@ -88,13 +88,14 @@ a { color: inherit; }
 }
 
 /* ---- Tool grid ---- */
-main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 24px; }
+main { max-width: 1280px; margin: 0 auto; padding: 32px 24px 20px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
-.section-head h2 { font-family: var(--display); font-weight: 700; font-size: 26px; margin: 0; letter-spacing: -0.01em; }
+.section-head h2 { font-family: var(--display); font-weight: 700; font-size: 22px; margin: 0; letter-spacing: -0.01em; }
 .section-head .count { font-size: 14px; color: var(--ink-mute); }
 
-.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-@media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 1080px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px)  { .grid { grid-template-columns: 1fr; } }
 
 .tool {
   background: var(--card); border: 1px solid var(--line); border-radius: 16px;
@@ -104,16 +105,16 @@ main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 24px; }
 .tool:hover { border-color: #D2C7AE; box-shadow: 0 10px 28px rgba(12,21,36,0.08); transform: translateY(-2px); }
 
 .tool { padding: 0; overflow: hidden; }
-.tool-body { padding: 0 24px 24px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+.tool-body { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
 .tool-art {
   background: radial-gradient(120% 90% at 50% 38%, #13213A 0%, var(--st-deep) 62%);
-  aspect-ratio: 16 / 7; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  aspect-ratio: 16 / 9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
   border-bottom: 3px solid var(--st-gold);
 }
-.tool-art img { width: 112px; height: auto; display: block; }
+.tool-art img { width: 88px; height: auto; display: block; }
 .tool-art .art-name {
   font-family: var(--body); font-weight: 600; color: #fff; text-transform: uppercase;
-  font-size: 19px; letter-spacing: 0.06em; text-align: center; padding: 0 16px; line-height: 1.2;
+  font-size: 15px; letter-spacing: 0.06em; text-align: center; padding: 0 16px; line-height: 1.2;
 }
 .tool-lockup { padding-top: 4px; }
 .tool-name .org {
@@ -122,10 +123,10 @@ main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 24px; }
   text-transform: uppercase; color: var(--st-bronze); margin-bottom: 4px;
 }
 .tool-name h3 {
-  font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1.1;
+  font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.1;
   letter-spacing: -0.01em; margin: 0; color: var(--ink);
 }
-.tool p.desc { margin: 0; color: var(--ink-soft); }
+.tool p.desc { margin: 0; color: var(--ink-soft); font-size: 15px; line-height: 1.5; }
 .meta { display: flex; flex-wrap: wrap; gap: 8px; }
 .tag {
   font-size: 13px; font-weight: 600; color: var(--st-navy); background: #EFEBE1;
@@ -135,7 +136,7 @@ main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 24px; }
 
 .open {
   margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 10px;
-  min-height: 52px; padding: 14px 20px; border-radius: 12px;
+  min-height: 48px; padding: 12px 16px; border-radius: 12px;
   background: var(--st-navy); color: #fff; text-decoration: none;
   font-family: var(--body); font-weight: 600; font-size: 16px;
   transition: background .18s ease;
@@ -150,12 +151,12 @@ main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 24px; }
 
 /* ---- Footer ---- */
 .note {
-  max-width: 1120px; margin: 0 auto; padding: 8px 24px 48px; color: var(--ink-soft); font-size: 15px;
+  max-width: 1280px; margin: 0 auto; padding: 8px 24px 48px; color: var(--ink-soft); font-size: 15px;
 }
 .note p { margin: 0; max-width: 70ch; }
 footer { background: var(--st-deeper); color: rgba(255,255,255,0.72); font-size: 14px; }
 .foot-inner {
-  max-width: 1120px; margin: 0 auto; padding: 32px 24px;
+  max-width: 1280px; margin: 0 auto; padding: 32px 24px;
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px 32px;
 }
 .values { font-family: var(--display); font-weight: 700; color: #fff; font-size: 16px; }
@@ -169,15 +170,14 @@ footer a:hover { text-decoration: underline; }
   .lockup .brand-name { font-size: 17px; }
   .lockup .mark { height: 32px; }
   .mast-link { display: none; }
-  .hero-inner { padding: 28px 16px 44px; }
-  .hero p.lede { font-size: 16px; }
-  main { padding: 36px 16px 16px; }
+  .hero-inner { padding: 18px 16px 22px; }
+  .hero p.lede { font-size: 14px; }
+  main { padding: 24px 16px 16px; }
   .note { padding: 8px 16px 40px; }
   .foot-inner { padding: 28px 16px; }
   .tool-body { padding: 0 20px 20px; }
-  .tool-art { gap: 12px; }
-  .tool-art img { width: 92px; }
-  .tool-art .art-name { font-size: 16px; }
+  .tool-art { gap: 10px; aspect-ratio: 16 / 7; }
+  .tool-art img { width: 84px; }
   .tool-name h3 { font-size: 21px; }
 }
 </style>
@@ -199,8 +199,10 @@ footer a:hover { text-decoration: underline; }
 
 <section class="hero">
   <div class="hero-inner">
-    <p class="eyebrow">Tool Suite</p>
-    <h1>Every ST Performance tool in one place.</h1>
+    <div>
+      <p class="eyebrow">Tool Suite</p>
+      <h1>Every ST Performance tool in one place.</h1>
+    </div>
     <p class="lede">These are working demonstrations of the tools used with individuals and performance departments. Choose a tool below and it will open in a new tab.</p>
   </div>
 </section>
@@ -264,7 +266,7 @@ const TOOLS = [
   },
   {
     name: "Full Platform Demo",
-    url: "",
+    url: "https://stperformanceglobal.github.io/performance-development-platform-demo/",
     desc: "The complete organisational platform. It shows the full role architecture across five disciplines with the weekly pulse, both audit loops and the self and manager views.",
     tags: ["Organisations"],
     gated: true
@@ -284,7 +286,7 @@ function render() {
     const tags = (t.tags || []).map(x => '<span class="tag">' + esc(x) + '</span>').join("") +
                  (t.gated ? '<span class="tag gate">Access code needed</span>' : "");
     const btn = live
-      ? '<a class="open" href="' + esc(t.url.trim()) + '" target="_blank" rel="noopener">Open ' + esc(t.name) + ' <span class="arrow" aria-hidden="true">&rarr;</span></a>'
+      ? '<a class="open" href="' + esc(t.url.trim()) + '" target="_blank" rel="noopener" aria-label="Open ' + esc(t.name) + '">Open tool <span class="arrow" aria-hidden="true">&rarr;</span></a>'
       : '<span class="open pending" aria-disabled="true">Link coming soon</span>';
     return '<article class="tool">' +
              '<div class="tool-art" aria-hidden="true"><img src="' + MARK + '" alt=""><span class="art-name">' + esc(t.name) + '</span></div>' +
