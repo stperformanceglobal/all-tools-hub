@@ -541,7 +541,7 @@ async function storeFeedbackPdf(file) {
   const storeButton = document.getElementById('feedbackStore');
   if (storeButton?.disabled) return;
   if (!/\\.pdf$/i.test(file.name) || file.size > STORED_PDF_MAX_BYTES) {
-    feedbackStatus('Choose a PDF no larger than 512 KB for the private holder. Selected: ' + String(file.name) + ' (' + String(file.size) + ' bytes).', true); return;
+    feedbackStatus('Choose a PDF no larger than 512 KB for the private holder.', true); return;
   }
   parseButton.disabled = storeButton.disabled = true;
   feedbackStatus('Storing the original PDF in the private holder…');
