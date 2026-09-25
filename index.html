@@ -104,8 +104,8 @@ main { max-width: 1440px; margin: 0 auto; padding: 32px 24px 20px; }
   transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 .tool:hover { border-color: #D2C7AE; box-shadow: 0 10px 28px rgba(12,21,36,0.08); transform: translateY(-2px); }
-.tool.soon { border: 2px solid var(--st-gold); background: #FFFCF4; }
-.tool.soon:hover { border-color: var(--st-bronze); }
+.tool.featured { border: 2px solid var(--st-gold); background: #FFFCF4; }
+.tool.featured:hover { border-color: var(--st-bronze); }
 
 .tool { padding: 0; overflow: hidden; }
 .tool-body { padding: 0 14px 18px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
@@ -287,11 +287,11 @@ const TOOLS = [
   },
   {
     name: "Value Feedback Loop",
-    url: "",
+    url: "https://stperformanceglobal.github.io/value-feedback-loop/",
     desc: "Staff being supported reflect on the value of the tools, conversations, process, Performance Support Guide and ST Performance as a whole for their holistic growth as practitioners and leaders. A PDF guides targeted improvements.",
     tags: [],
     gated: false,
-    soon: true
+    featured: true
   }
 ];
 
@@ -311,7 +311,7 @@ function render() {
     const btn = live
       ? '<a class="open" href="' + esc(t.url.trim()) + '" target="_blank" rel="noopener" aria-label="Open ' + esc(t.name) + '">Open tool <span class="arrow" aria-hidden="true">&rarr;</span></a>'
       : '<span class="open pending" aria-disabled="true">Link coming soon</span>';
-    return '<article class="tool' + (t.soon ? ' soon' : '') + '">' +
+    return '<article class="tool' + (t.featured ? ' featured' : '') + '">' +
              '<div class="tool-art" aria-hidden="true"><img src="' + MARK + '" alt=""><span class="art-name">' + esc(t.name) + '</span></div>' +
              '<div class="tool-body">' +
              '<div class="tool-lockup"><div class="tool-name"><span class="org">ST Performance</span><h3>' + esc(t.name) + '</h3></div></div>' +
