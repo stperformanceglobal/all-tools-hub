@@ -485,7 +485,7 @@ function parseFeedbackFile(file) {
       if (!parserFrame) {
         parserFrame = document.createElement('iframe');
         parserFrame.style.display = 'none';
-        parserFrame.setAttribute('sandbox', 'allow-scripts');
+        parserFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
         document.body.append(parserFrame);
         const ready = new Promise((ok, fail) => { parserFrame.onload = ok; parserFrame.onerror = fail; });
         parserFrame.srcdoc = await dashboardHtml();
