@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner() {
+      return request.auth != null
+        && request.auth.token.email == 'simon@stperformanceglobal.com'
+        && request.auth.token.email_verified == true
+        && request.auth.token.firebase.sign_in_provider == 'google.com';
+    }
+
+    match /feedbackResponses/{responseId} {
+      allow get, list: if isOwner();
+      allow create: if (request.auth == null || isOwner())
+        && responseId.matches('^fl-[a-z0-9]{8,32}$')
+        && request.resource.data.keys().hasOnly(['kind', 'responseId', 'payload', 'receivedAt'])
+        && request.resource.data.keys().hasAll(['kind', 'responseId', 'payload', 'receivedAt'])
+        && request.resource.data.kind == 'feedback-loop'
+        && request.resource.data.responseId == responseId
+        && request.resource.data.payload is string
+        && request.resource.data.payload.size() <= 30000
+        && request.resource.data.receivedAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
