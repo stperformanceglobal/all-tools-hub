@@ -455,8 +455,16 @@ function openFeedback(mode) {
   } else {
     feedbackBody.className = 'feedback-panel-body';
     feedbackBody.innerHTML = '<p>Sign in with the ST Performance owner account to view and aggregate submitted feedback.</p><button class="feedback-primary" id="feedbackLogin" type="button">Sign in to dashboard</button><div class="feedback-status" id="feedbackStatus" role="status" aria-live="polite"></div>';
-    document.getElementById('feedbackLogin').addEventListener('click', signInFeedbackOwner);
-    document.getElementById('feedbackLogin').focus();
+    const loginButton = document.getElementById('feedbackLogin');
+    loginButton.disabled = true;
+    loginButton.addEventListener('click', signInFeedbackOwner);
+    feedbackStatus('Preparing secure sign-in…');
+    feedbackFirebase().then(() => {
+      if (feedbackModal.hidden || feedbackBody.querySelector('#feedbackLogin') !== loginButton) return;
+      loginButton.disabled = false;
+      feedbackStatus('');
+      loginButton.focus();
+    }).catch(error => feedbackStatus(error.message || 'Sign-in is unavailable. Please try again later.', true));
   }
 }
 async function closeFeedback() {
