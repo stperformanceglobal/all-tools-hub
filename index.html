@@ -167,7 +167,7 @@ main { max-width: 1440px; margin: 0 auto; padding: 32px 24px 20px; }
 .feedback-modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(8,15,27,.76); }
 .feedback-panel { width: min(660px,100%); max-height: min(90vh,900px); overflow: auto; border: 1px solid var(--st-gold); border-radius: 16px; background: var(--paper); box-shadow: 0 20px 70px rgba(0,0,0,.3); }
 .feedback-panel.dashboard { width: min(1240px,100%); height: min(92vh,1000px); display: flex; flex-direction: column; }
-.feedback-panel.dashboard #feedbackBody { flex: 1; min-height: 0; display: flex; }
+.feedback-panel.dashboard #feedbackBody { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .feedback-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--st-deep); color: white; padding: 14px 18px; }
 .feedback-panel-head h2 { margin: 0; font: 700 20px var(--display); }
 .feedback-close { background: transparent; color: white; border: 1px solid rgba(255,255,255,.4); border-radius: 8px; padding: 5px 11px; font-size: 20px; cursor: pointer; }
@@ -181,6 +181,14 @@ main { max-width: 1440px; margin: 0 auto; padding: 32px 24px 20px; }
 .feedback-primary:hover { background: var(--st-deep); }
 .feedback-status { min-height: 24px; margin-top: 14px; font-size: 14px; font-weight: 600; color: var(--st-navy); }
 .feedback-status.error { color: #9B3A2E; }
+.feedback-archive { width: 100%; border-bottom: 1px solid #d7cfba; padding: 8px 18px; background: #fffaf0; color: var(--st-navy); font-size: 14px; }
+.feedback-archive summary { cursor: pointer; font-weight: 700; }
+.feedback-archive-list { display: grid; gap: 7px; margin: 10px 0 3px; }
+.feedback-archive-item { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.feedback-archive-item span { margin-right: auto; }
+.feedback-archive button, .feedback-store { border: 1px solid var(--st-gold); border-radius: 7px; background: #fff; color: var(--st-navy); padding: 7px 10px; font: 600 13px var(--body); cursor: pointer; }
+.feedback-store { margin-left: 8px; }
+.feedback-archive-status { margin: 8px 0 0; }
 .feedback-frame { display: block; width: 100%; flex: 1; min-height: 0; border: 0; background: var(--paper); }
 .feedback-dashboard-actions { display: flex; align-items: center; gap: 8px; }
 .feedback-dashboard-actions button { border: 1px solid rgba(255,255,255,.4); border-radius: 8px; background: transparent; color: white; padding: 7px 10px; cursor: pointer; }
@@ -399,6 +407,8 @@ const feedbackSignOut = document.getElementById('feedbackSignOut');
 let feedbackPreviousFocus = null;
 let parserFrame = null;
 let dashboardFrame = null;
+let storedPdfGroups = new Map();
+let feedbackUploadMode = 'parse';
 let inboxUnsubscribe = null;
 let firebasePromise = null;
 let dashboardHtmlPromise = null;
@@ -441,16 +451,17 @@ function openFeedback(mode) {
   feedbackTitle.textContent = mode === 'mailbox' ? 'Drop Feedback Here' : 'Private feedback dashboard';
   if (mode === 'mailbox') {
     feedbackBody.className = 'feedback-panel-body';
-    feedbackBody.innerHTML = '<p>Drop the PDF produced by the Value Feedback Loop. This reads the answers on your device and sends the feedback to the private inbox without asking for a name or email address.</p><div class="feedback-drop" id="feedbackDrop" role="button" tabindex="0"><strong>Drop your feedback PDF here</strong><span>Or choose a PDF from your device.</span><button class="feedback-primary" id="feedbackChoose" type="button">Choose PDF</button></div><input id="feedbackFile" type="file" accept=".pdf,application/pdf" hidden><div class="feedback-status" id="feedbackStatus" role="status" aria-live="polite"></div>';
+    feedbackBody.innerHTML = '<p>Drop the PDF produced by the Value Feedback Loop. This reads the answers on your device and sends the feedback to the private inbox without asking for a name or email address. You can also store the original PDF for private owner review if its answers cannot be read.</p><div class="feedback-drop" id="feedbackDrop" role="button" tabindex="0"><strong>Drop your feedback PDF here</strong><span>Or choose a PDF from your device.</span><button class="feedback-primary" id="feedbackChoose" type="button">Submit answers from PDF</button><button class="feedback-store" id="feedbackStore" type="button">Store original PDF privately</button></div><input id="feedbackFile" type="file" accept=".pdf,application/pdf" hidden><div class="feedback-status" id="feedbackStatus" role="status" aria-live="polite"></div>';
     const input = document.getElementById('feedbackFile');
     const drop = document.getElementById('feedbackDrop');
-    document.getElementById('feedbackChoose').addEventListener('click', e => { e.stopPropagation(); input.click(); });
-    drop.addEventListener('click', () => input.click());
+    document.getElementById('feedbackChoose').addEventListener('click', e => { e.stopPropagation(); feedbackUploadMode = 'parse'; input.click(); });
+    document.getElementById('feedbackStore').addEventListener('click', e => { e.stopPropagation(); feedbackUploadMode = 'raw'; input.click(); });
+    drop.addEventListener('click', e => { if (e.target.closest('button')) return; feedbackUploadMode = 'parse'; input.click(); });
     drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
     for (const type of ['dragenter','dragover']) drop.addEventListener(type, e => { e.preventDefault(); drop.classList.add('over'); });
     for (const type of ['dragleave','drop']) drop.addEventListener(type, e => { e.preventDefault(); drop.classList.remove('over'); });
     drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) submitFeedbackFile(e.dataTransfer.files[0]); });
-    input.addEventListener('change', e => { if (e.target.files[0]) submitFeedbackFile(e.target.files[0]); input.value = ''; });
+    input.addEventListener('change', e => { if (e.target.files[0]) (feedbackUploadMode === 'raw' ? storeFeedbackPdf : submitFeedbackFile)(e.target.files[0]); input.value = ''; });
     document.getElementById('feedbackChoose').focus();
   } else {
     feedbackBody.className = 'feedback-panel-body';
@@ -470,6 +481,7 @@ function openFeedback(mode) {
 async function closeFeedback() {
   if (inboxUnsubscribe) { inboxUnsubscribe(); inboxUnsubscribe = null; }
   if (dashboardFrame) { dashboardFrame.remove(); dashboardFrame = null; }
+  storedPdfGroups.clear();
   feedbackModal.hidden = true;
   document.body.style.overflow = '';
   feedbackBody.replaceChildren();
@@ -504,6 +516,112 @@ function parseFeedbackFile(file) {
       parserFrame.contentWindow.postMessage({ type: 'ST_FEEDBACK_PARSE', token, file }, '*');
     } catch (e) { clearTimeout(timer); reject(e); }
   });
+}
+// Firestore backup: bounded PDF pieces use the existing create-only, owner-read rules.
+// No filename, email, IP address or identifying fields are added by this page.
+const STORED_PDF_MAX_BYTES = 512 * 1024;
+const STORED_PDF_CHUNK_CHARS = 20000;
+function pdfBytesToBase64(bytes) {
+  const parts = [];
+  for (let i = 0; i < bytes.length; i += 8192) {
+    let binary = '';
+    for (const value of bytes.subarray(i, i + 8192)) binary += String.fromCharCode(value);
+    parts.push(binary);
+  }
+  return btoa(parts.join(''));
+}
+function storedPdfBytes(group) {
+  const chunks = storedPdfGroups.get(group);
+  if (!chunks || chunks.some(x => typeof x !== 'string')) throw new Error('The stored PDF is incomplete.');
+  const binary = atob(chunks.join(''));
+  return Uint8Array.from(binary, c => c.charCodeAt(0));
+}
+async function storeFeedbackPdf(file) {
+  const parseButton = document.getElementById('feedbackChoose');
+  const storeButton = document.getElementById('feedbackStore');
+  if (storeButton?.disabled) return;
+  if (!/\\.pdf$/i.test(file.name) || file.size > STORED_PDF_MAX_BYTES) {
+    feedbackStatus('Choose a PDF no larger than 512 KB for the private holder.', true); return;
+  }
+  parseButton.disabled = storeButton.disabled = true;
+  feedbackStatus('Storing the original PDF in the private holder…');
+  try {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (bytes.length < 5 || String.fromCharCode(...bytes.subarray(0, 5)) !== '%PDF-') throw new Error('The selected file is not a PDF.');
+    const encoded = pdfBytesToBase64(bytes);
+    const group = Array.from(crypto.getRandomValues(new Uint8Array(8)), n => n.toString(16).padStart(2, '0')).join('');
+    const count = Math.ceil(encoded.length / STORED_PDF_CHUNK_CHARS);
+    const { firestore, database } = await feedbackFirebase();
+    const batch = firestore.writeBatch(database);
+    for (let i = 0; i < count; i++) {
+      const responseId = 'fl-' + group + i.toString(16).padStart(4, '0');
+      const payload = 'PDF1|' + group + '|' + i + '|' + count + '|' + encoded.slice(i * STORED_PDF_CHUNK_CHARS, (i + 1) * STORED_PDF_CHUNK_CHARS);
+      batch.set(firestore.doc(database, 'feedbackResponses', responseId), {
+        kind: 'feedback-loop', responseId, payload, receivedAt: firestore.serverTimestamp()
+      });
+    }
+    await batch.commit();
+    feedbackStatus('The original PDF is in the private holder. The owner can download it and add it to the dashboard.');
+  } catch (e) {
+    feedbackStatus(e.code === 'permission-denied' ? 'The private holder rejected this upload. Please try again.' : e.message || 'The PDF could not be stored. Please try again.', true);
+  } finally { parseButton.disabled = storeButton.disabled = false; }
+}
+function renderStoredPdfs(snapshot) {
+  const groups = new Map();
+  for (const item of snapshot.docs) {
+    const payload = item.data().payload;
+    const match = typeof payload === 'string' && /^PDF1\|([0-9a-f]{16})\|(\d+)\|(\d+)\|([A-Za-z0-9+/=]+)$/.exec(payload);
+    if (!match) continue;
+    const group = match[1], index = Number(match[2]), total = Number(match[3]);
+    if (total < 1 || total > 36 || index >= total) continue;
+    if (!groups.has(group)) groups.set(group, Array(total));
+    const parts = groups.get(group);
+    if (parts.length === total) parts[index] = match[4];
+  }
+  storedPdfGroups = new Map([...groups].filter(([, parts]) => [...parts].every(x => typeof x === 'string')));
+  const archive = document.getElementById('feedbackArchiveList');
+  const summary = document.getElementById('feedbackArchiveSummary');
+  if (!archive || !summary) return;
+  summary.textContent = 'Private PDF holder (' + storedPdfGroups.size + ')';
+  archive.replaceChildren();
+  if (!storedPdfGroups.size) { archive.textContent = 'No stored PDFs yet.'; return; }
+  for (const group of storedPdfGroups.keys()) {
+    const row = document.createElement('div'); row.className = 'feedback-archive-item';
+    const label = document.createElement('span'); label.textContent = 'PDF ' + group.slice(0, 8);
+    for (const [action, title] of [['import', 'Add to dashboard'], ['download', 'Download PDF']]) {
+      const button = document.createElement('button'); button.type = 'button'; button.textContent = title;
+      button.addEventListener('click', () => handleStoredPdf(group, action, button));
+      row.append(button);
+    }
+    row.prepend(label); archive.append(row);
+  }
+}
+async function handleStoredPdf(group, action, button) {
+  button.disabled = true;
+  const status = document.getElementById('feedbackArchiveStatus');
+  try {
+    const bytes = storedPdfBytes(group);
+    const name = 'feedback-' + group.slice(0, 8) + '.pdf';
+    if (action === 'download') {
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+      const link = document.createElement('a'); link.href = url; link.download = name;
+      document.body.append(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      status.textContent = 'PDF downloaded.';
+    } else {
+      status.textContent = 'Reading the stored PDF…';
+      const response = await parseFeedbackFile(new File([bytes], name, { type: 'application/pdf' }));
+      if (!response || response.kind !== 'feedback-loop' || !/^fl-[a-z0-9]{8,32}$/.test(response.responseId)) throw new Error('This PDF has no readable Feedback Loop answers. Download it for review.');
+      const payload = JSON.stringify({ kind: response.kind, schema: response.schema, responseId: response.responseId, submittedAt: response.submittedAt, role: response.role, tools: response.tools, answers: response.answers, scores: response.scores });
+      if (payload.length > 30000) throw new Error('The extracted answers are too large.');
+      const { firestore, database } = await feedbackFirebase();
+      await firestore.setDoc(firestore.doc(database, 'feedbackResponses', response.responseId), {
+        kind: 'feedback-loop', responseId: response.responseId, payload, receivedAt: firestore.serverTimestamp()
+      });
+      status.textContent = 'Answers added to the dashboard. The original PDF remains in the holder.';
+    }
+  } catch (e) { status.textContent = e.message || 'Could not process the stored PDF.'; }
+  finally { button.disabled = false; }
 }
 async function submitFeedbackFile(file) {
   const button = document.getElementById('feedbackChoose');
@@ -541,6 +659,9 @@ async function signInFeedbackOwner() {
     feedbackPanel.classList.add('dashboard');
     feedbackBody.className = '';
     feedbackBody.replaceChildren();
+    const archive = document.createElement('details'); archive.className = 'feedback-archive';
+    archive.innerHTML = '<summary id="feedbackArchiveSummary">Private PDF holder</summary><div class="feedback-archive-list" id="feedbackArchiveList">Loading stored PDFs…</div><p class="feedback-archive-status" id="feedbackArchiveStatus" role="status" aria-live="polite"></p>';
+    feedbackBody.append(archive);
     dashboardFrame = document.createElement('iframe');
     dashboardFrame.className = 'feedback-frame';
     dashboardFrame.title = 'Private Feedback Loop Dashboard';
@@ -551,7 +672,8 @@ async function signInFeedbackOwner() {
     await ready;
     feedbackSignOut.hidden = false;
     inboxUnsubscribe = firestore.onSnapshot(firestore.collection(database, 'feedbackResponses'), snapshot => {
-      const responses = snapshot.docs.map(d => { try { return JSON.parse(d.data().payload); } catch (_) { return null; } }).filter(Boolean);
+      renderStoredPdfs(snapshot);
+      const responses = snapshot.docs.map(d => { try { const item = JSON.parse(d.data().payload); return item?.kind === 'feedback-loop' ? item : null; } catch (_) { return null; } }).filter(Boolean);
       dashboardFrame?.contentWindow?.postMessage({ type: 'ST_FEEDBACK_INBOX', responses }, location.origin);
     }, error => {
       feedbackTitle.textContent = 'Dashboard access error';
