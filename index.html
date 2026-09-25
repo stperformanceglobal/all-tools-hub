@@ -482,6 +482,7 @@ function parseFeedbackFile(file) {
   return new Promise(async (resolve, reject) => {
     let timer;
     try {
+      try { await file.arrayBuffer(); } catch (e) { throw new Error('Could not read the selected file: ' + e.message); }
       if (!parserFrame) {
         parserFrame = document.createElement('iframe');
         parserFrame.style.display = 'none';
