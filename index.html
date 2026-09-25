@@ -422,7 +422,7 @@ async function dashboardHtml() {
   if (!dashboardHtmlPromise) dashboardHtmlPromise = (async () => {
     const binary = Uint8Array.from(atob(DASHBOARD_GZIP_BASE64), c => c.charCodeAt(0));
     const stream = new Blob([binary]).stream().pipeThrough(new DecompressionStream('gzip'));
-    return new Response(stream).text();
+    return new Response(stream).text().then(html => html.replace('throw new Error(`${file.name}: could not be opened as a PDF.`);', 'throw new Error(`${file.name}: could not be opened as a PDF: ${e.message}`);'));
   })();
   return dashboardHtmlPromise;
 }
