@@ -225,6 +225,18 @@ footer a:hover { text-decoration: underline; }
   .tool-art img { width: 84px; }
   .tool-name h3 { font-size: 21px; }
 }
+
+/* ---- Reviewer band (for subject matter experts) ---- */
+.reviewer { max-width: 1440px; margin: 0 auto; padding: 8px 24px 28px; }
+.reviewer-card { display: flex; align-items: center; gap: 22px; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--st-gold); border-radius: 14px; padding: 18px 22px; }
+.reviewer-qr { flex: none; width: 112px; height: 112px; border: 1px solid var(--line); border-radius: 8px; padding: 4px; background: #fff; }
+.reviewer-qr svg { display: block; width: 100%; height: 100%; }
+.reviewer-text .eyebrow { color: #A8791A; margin: 0 0 4px; }
+.reviewer-text h3 { font-family: var(--display); font-weight: 700; font-size: 19px; margin: 0 0 6px; letter-spacing: -0.01em; }
+.reviewer-text p { margin: 0 0 6px; max-width: 64ch; font-size: 14.5px; color: var(--ink-soft); }
+.reviewer-text a.reviewer-link { font-size: 14px; font-weight: 600; color: var(--st-navy); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+@media (max-width: 520px) { .reviewer { padding: 4px 16px 24px; } .reviewer-card { flex-direction: column; align-items: flex-start; padding: 16px; } .reviewer-qr { width: 132px; height: 132px; } }
+@media print { .reviewer-card { break-inside: avoid; } }
 </style>
 </head>
 <body>
@@ -268,6 +280,18 @@ footer a:hover { text-decoration: underline; }
   </div>
   <div class="grid" id="grid"></div>
 </main>
+
+<section class="reviewer" id="reviewers" aria-labelledby="reviewerTitle">
+  <div class="reviewer-card">
+    <div class="reviewer-qr"><svg role="img" aria-label="QR code for the reviewer feedback tool" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges" class="segno"><path fill="#fff" d="M0 0h37v37h-37z"/><path class="qrline" stroke="#182c4d" d="M2 2.5h7m2 0h4m1 0h2m2 0h2m2 0h2m2 0h7m-33 1h1m5 0h1m2 0h1m1 0h2m2 0h1m1 0h1m2 0h2m1 0h1m2 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m5 0h1m1 0h2m1 0h1m2 0h1m3 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m4 0h1m1 0h1m1 0h1m2 0h2m2 0h2m2 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m2 0h3m4 0h1m1 0h1m3 0h2m2 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m1 0h2m1 0h1m1 0h2m2 0h4m1 0h1m1 0h1m1 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-23 1h2m2 0h1m2 0h3m1 0h2m1 0h1m-25 1h1m2 0h1m1 0h2m1 0h1m3 0h5m4 0h1m1 0h1m1 0h1m1 0h1m-28 1h3m9 0h1m1 0h1m1 0h2m2 0h2m2 0h4m3 0h2m-31 1h1m1 0h3m2 0h1m7 0h3m1 0h1m3 0h4m1 0h1m1 0h1m-33 1h1m2 0h2m3 0h1m1 0h2m2 0h1m1 0h1m1 0h1m1 0h2m2 0h2m2 0h2m2 0h1m-33 1h1m3 0h1m1 0h2m1 0h4m2 0h1m1 0h1m2 0h3m2 0h3m1 0h1m1 0h2m-33 1h2m2 0h1m3 0h1m4 0h1m1 0h2m2 0h2m1 0h1m1 0h1m1 0h1m1 0h2m1 0h2m-29 1h5m4 0h2m2 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m-32 1h2m1 0h1m3 0h2m1 0h1m1 0h2m1 0h1m1 0h1m1 0h6m1 0h1m1 0h2m1 0h1m-32 1h3m1 0h5m5 0h1m2 0h1m1 0h4m1 0h1m1 0h1m1 0h1m2 0h1m-31 1h2m5 0h1m1 0h1m1 0h1m1 0h1m2 0h1m4 0h3m2 0h1m1 0h1m-29 1h2m3 0h2m3 0h2m1 0h1m1 0h3m1 0h1m3 0h3m3 0h3m-33 1h1m1 0h3m2 0h2m1 0h1m2 0h1m1 0h1m1 0h5m1 0h1m1 0h1m1 0h1m-28 1h2m1 0h1m1 0h4m1 0h2m1 0h4m1 0h2m1 0h1m1 0h3m6 0h1m-30 1h3m1 0h1m1 0h5m1 0h2m3 0h2m2 0h1m1 0h2m2 0h3m-33 1h4m2 0h1m1 0h2m2 0h4m1 0h1m1 0h1m1 0h1m3 0h4m3 0h1m-32 1h2m1 0h2m2 0h5m3 0h1m1 0h2m1 0h1m6 0h2m1 0h2m-33 1h1m1 0h1m1 0h7m1 0h6m2 0h2m1 0h6m-21 1h3m1 0h1m6 0h4m1 0h1m3 0h2m2 0h1m-33 1h7m4 0h1m1 0h1m6 0h2m2 0h1m1 0h1m1 0h4m-32 1h1m5 0h1m1 0h4m1 0h3m1 0h3m1 0h1m2 0h1m3 0h1m2 0h1m-32 1h1m1 0h3m1 0h1m2 0h1m2 0h2m4 0h5m1 0h6m2 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h1m10 0h1m1 0h1m1 0h1m-31 1h1m1 0h3m1 0h1m2 0h3m1 0h1m2 0h3m4 0h3m2 0h3m1 0h1m-33 1h1m5 0h1m3 0h1m1 0h6m2 0h2m1 0h3m-26 1h7m1 0h2m3 0h1m2 0h1m4 0h1m2 0h1m1 0h1m1 0h2m1 0h1"/></svg></div>
+    <div class="reviewer-text">
+      <p class="eyebrow">For subject matter experts and reviewers</p>
+      <h3 id="reviewerTitle">Thank you for your time and expertise</h3>
+      <p>Your review of these tools and the discipline specific measurables is shaping what they become. Scan the code or use the link to give your feedback and any detail adjustments. The access code is in your invitation email.</p>
+      <a class="reviewer-link" href="https://stperformanceglobal.github.io/reviewer-feedback/" target="_blank" rel="noopener">Open the reviewer feedback tool</a>
+    </div>
+  </div>
+</section>
 
 <div class="note">
   <p>Some demos ask for an access code. Contact <a href="mailto:simon@stperformanceglobal.com">simon@stperformanceglobal.com</a> if you have not been given one. All demo data is synthetic.</p>
